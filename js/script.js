@@ -148,20 +148,27 @@ const checkCollision = () => {
 
 let deathAudioPlayed = false;
 
-const gameOver = () => {
-  direction = undefined;
-
+const playDeathAudio = () => {
   if (!deathAudioPlayed) {
     deathAudio.play();
     deathAudioPlayed = true;
+
+    deathAudio.addEventListener("ended", function () {
+      deathAudio.remove();
+      deathAudioPlayed = false;
+    });
   }
+};
+
+const gameOver = () => {
+  direction = undefined;
+
+  playDeathAudio();
 
   menu.style.display = "flex";
   finalScore.innerText = score.innerText;
   canvas.style.filter = "blur(2px)";
 };
-
-
 
 const gameLoop = () => {
   clearInterval(loopId);
@@ -219,4 +226,5 @@ btn.addEventListener("click", () => {
   food.y = randomPosition();
   food.color = randomColor();
   drawFood();
+  deathAudioPlayed = false;
 });
